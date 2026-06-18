@@ -122,40 +122,65 @@ def edit(id):
         return redirect("/")
 
     return render_template("edit.html")
-
 # 📅 MONTHLY REPORT
 @app.route("/monthly-report")
 def monthly_report():
 
     transactions = get_transactions()
 
-    df = pd.DataFrame(transactions)
-
-    if df.empty:
+    if not transactions:
         return render_template(
             "monthly_report.html",
-            report=[],
-            total_income=0,
-            total_expense=0
+            results=[],
+            profit_data=[],
+            labels=[],
+            profit=[]
         )
+
+    df = pd.DataFrame(transactions)
 
     df["date"] = pd.to_datetime(df["date"])
     df["month"] = df["date"].dt.strftime("%B %Y")
 
-    report = df.groupby(["month", "transaction_type"])["amount"].sum().unstack(fill_value=0).reset_index()
+    # Summary
+    summary = (
+        df.groupby(["month", "transaction_type"])["amount"]
+        .sum()
+        .reset_index()
+    )
 
-    report = report.rename(columns={
-        "Cash In": "Income",
-        "Cash Out": "Expense"
-    })
+    results = summary.values.tolist()
 
-    report["Balance"] = report.get("Income", 0) - report.get("Expense", 0)
+    # Profit
+    report = (
+        df.groupby(["month", "transaction_type"])["amount"]
+        .sum()
+        .unstack(fill_value=0)
+    )
+
+    if "Cash In" not in report.columns:
+        report["Cash In"] = 0
+
+    if "Cash Out" not in report.columns:
+        report["Cash Out"] = 0
+
+    report["Profit"] = report["Cash In"] - report["Cash Out"]
+
+    profit_data = [
+        [month, profit]
+        for month, profit in zip(report.index, report["Profit"])
+    ]
+
+    labels = list(report.index)
+    profit = list(report["Profit"])
 
     return render_template(
         "monthly_report.html",
-        report=report.to_dict(orient="records")
+        results=results,
+        profit_data=profit_data,
+        labels=labels,
+        profit=profit
     )
-
 
 # 📊 EXPORT EXCEL
 @app.route("/export")
