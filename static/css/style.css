@@ -1,0 +1,211 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* MAIN CONTAINER */
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* HEADER */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* CARDS */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.card {
+    padding: 18px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card.green { background: #2ecc71; }
+.card.red { background: #e74c3c; }
+.card.blue { background: #3498db; }
+.card.dark { background: #2c3e50; }
+
+/* COMPANY BOX */
+.company-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* CHART BOX */
+.chart-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* FILTER BOX */
+.filter-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 15px 0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+input {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* BUTTONS */
+button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.btn.green-btn { background: #2ecc71; color: white; }
+.btn.red-btn { background: #e74c3c; color: white; }
+.btn.blue-btn { background: #3498db; color: white; }
+
+/* TABLE */
+.table-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th {
+    background: #2c3e50;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+    margin: 15px 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+/* =========================
+   MOBILE RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 768px) {
+
+    .container {
+        padding: 10px;
+    }
+
+    /* HEADER */
+    .header h1 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .header p {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    /* COMPANY BOX */
+    .company-box {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    /* DASHBOARD CARDS */
+    .dashboard-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .card {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* FILTER SECTION */
+    .filter-box form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-box input,
+    .filter-box button {
+        width: 100%;
+    }
+
+    /* ACTION BUTTONS */
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-buttons button {
+        width: 100%;
+    }
+
+    /* TABLE SCROLL FIX */
+    .table-box {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    /* CHART */
+    .chart-box {
+        width: 100%;
+    }
+}

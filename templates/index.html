@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuber Agro Finance Manager</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>📊 Kuber Agro Finance Manager</h1>
+        <p>Smart Business Expense Dashboard</p>
+    </div>
+
+    <!-- COMPANY INFO -->
+    <div class="company-box">
+        <h3>🏢 Company Information</h3>
+        <p><strong>Company Name:</strong> Kuber Agro</p>
+        <p><strong>Firm Head:</strong> Aman Singla</p>
+    </div>
+
+    <!-- DASHBOARD CARDS -->
+    <div class="dashboard-cards">
+
+        <div class="card green">
+            <h4>💰 Cash In</h4>
+            <h2>₹ {{ total_cash_in | default(0) }}</h2>
+        </div>
+
+        <div class="card red">
+            <h4>💸 Cash Out</h4>
+            <h2>₹ {{ total_cash_out | default(0) }}</h2>
+        </div>
+
+        <div class="card blue">
+            <h4>📊 Balance</h4>
+            <h2>₹ {{ balance | default(0) }}</h2>
+        </div>
+
+        <div class="card dark">
+            <h4>📁 Transactions</h4>
+            <h2>{{ transaction_count | default(0) }}</h2>
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-box">
+        <h3>📈 Finance Overview</h3>
+        <canvas id="financeChart"></canvas>
+    </div>
+
+    <!-- FILTER SECTION -->
+    <div class="filter-box">
+
+        <form method="GET" action="/">
+            <input type="text" name="search"
+                placeholder="🔍 Search Party / Invoice / Purpose..."
+                value="{{ search or '' }}">
+
+            <button type="submit">Search</button>
+            <button type="button" onclick="window.location.href='/'">Clear</button>
+        </form>
+
+        <form method="GET" action="/">
+            <input type="date" name="from_date" value="{{ from_date or '' }}">
+            <input type="date" name="to_date" value="{{ to_date or '' }}">
+            <button type="submit">Filter</button>
+        </form>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+
+        <a href="/cash-in"><button class="btn green-btn">+ Cash In</button></a>
+        <a href="/cash-out"><button class="btn red-btn">- Cash Out</button></a>
+        <a href="/export"><button class="btn blue-btn">⬇ Export Excel</button></a>
+        <a href="/monthly-report"><button class="btn blue-btn">📊 Monthly Report</button></a>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-box">
+
+        <h2>📋 Recent Transactions</h2>
+
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Type</th>
+                <th>Party</th>
+                <th>Purpose</th>
+                <th>Mode</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.invoice_no }}</td>
+                <td>{{ transaction.transaction_type }}</td>
+                <td>{{ transaction.party }}</td>
+                <td>{{ transaction.purpose }}</td>
+                <td>{{ transaction.payment_mode }}</td>
+                <td>₹ {{ transaction.amount }}</td>
+                <td>
+                    <a href="/edit/{{ transaction.id }}"><button class="edit">Edit</button></a>
+                    <a href="/delete/{{ transaction.id }}" onclick="return confirm('Delete this transaction?')">
+                        <button class="delete">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- ✅ CLEAN CHART SCRIPT (NO ERRORS) -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const cashIn = Number("{{ total_cash_in | default(0) }}");
+    const cashOut = Number("{{ total_cash_out | default(0) }}");
+
+    const canvas = document.getElementById('financeChart');
+
+    if (!canvas) return;
+
+    new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: ['Cash In', 'Cash Out'],
+            datasets: [{
+                label: 'Amount (₹)',
+                data: [cashIn, cashOut],
+                backgroundColor: ['green', 'red'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

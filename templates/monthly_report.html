@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monthly Report</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* optional small fix so chart shows properly */
+        #monthlyChart {
+            max-height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📊 Monthly Report</h1>
+
+    <a href="/">
+        <button>⬅ Back to Dashboard</button>
+    </a>
+
+    <br><br>
+
+    <!-- SUMMARY TABLE -->
+    <table border="1" width="100%">
+        <tr>
+            <th>Month</th>
+            <th>Type</th>
+            <th>Total Amount</th>
+        </tr>
+
+        {% for row in results %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>₹ {{ row[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br><br>
+
+    <!-- PROFIT TABLE -->
+    <h2>💰 Monthly Profit</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <th>Month</th>
+            <th>Profit</th>
+        </tr>
+
+        {% for row in profit_data %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>₹ {{ row[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br><br>
+
+    <!-- CHART -->
+    <h2>📈 Monthly Profit Chart</h2>
+
+    <canvas id="monthlyChart"></canvas>
+
+</div>
+
+<!-- ✅ SAFE CHART SCRIPT (NO ERRORS) -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // safe data from Flask
+    const labels = JSON.parse('{{ labels | tojson | safe }}' || "[]");
+    const profit = JSON.parse('{{ profit | tojson | safe }}' || "[]");
+
+    const canvas = document.getElementById('monthlyChart');
+    if (!canvas) return;
+
+    new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Monthly Profit (₹)',
+                data: profit,
+                borderColor: 'green',
+                backgroundColor: 'rgba(0,255,0,0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

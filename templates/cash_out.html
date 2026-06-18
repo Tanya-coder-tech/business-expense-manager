@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cash Out - Kuber Agro</title>
+</head>
+<body>
+<h1>Kuber Agro - Cash Out</h1>
+
+<form method="POST">
+
+    <label>Date</label><br>
+    <input type="date" name="date"><br><br>
+
+    <label>Invoice Number</label><br>
+    <input type="text" name="invoice_no"><br><br>
+
+    <label>Paid To</label><br>
+    <input type="text" name="party"><br><br>
+
+    <label>Purpose</label><br>
+    <input type="text" name="purpose"><br><br>
+
+    <label>Amount</label><br>
+    <input type="number" name="amount"><br><br>
+
+    <label>Payment Mode</label><br>
+    <select name="payment_mode">
+        <option>Cash</option>
+        <option>UPI</option>
+        <option>Bank Transfer</option>
+    </select><br><br>
+
+    <button type="submit">Save Cash Out</button>
+
+</form>
+
+</body>
+</html>
