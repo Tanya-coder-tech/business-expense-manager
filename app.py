@@ -123,6 +123,39 @@ def edit(id):
 
     return render_template("edit.html")
 
+# 📅 MONTHLY REPORT
+@app.route("/monthly-report")
+def monthly_report():
+
+    transactions = get_transactions()
+
+    df = pd.DataFrame(transactions)
+
+    if df.empty:
+        return render_template(
+            "monthly_report.html",
+            report=[],
+            total_income=0,
+            total_expense=0
+        )
+
+    df["date"] = pd.to_datetime(df["date"])
+    df["month"] = df["date"].dt.strftime("%B %Y")
+
+    report = df.groupby(["month", "transaction_type"])["amount"].sum().unstack(fill_value=0).reset_index()
+
+    report = report.rename(columns={
+        "Cash In": "Income",
+        "Cash Out": "Expense"
+    })
+
+    report["Balance"] = report.get("Income", 0) - report.get("Expense", 0)
+
+    return render_template(
+        "monthly_report.html",
+        report=report.to_dict(orient="records")
+    )
+
 
 # 📊 EXPORT EXCEL
 @app.route("/export")
